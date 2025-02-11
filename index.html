@@ -6,7 +6,7 @@
     <title>Status do Modbus - ESP32</title>
     <script>
         function updateStatus() {
-            fetch('http://<IP_DO_ESP32>/status')
+            fetch('http://192.168.1.32>/status')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("wifiStatus").innerText = data.wifiStatus;
