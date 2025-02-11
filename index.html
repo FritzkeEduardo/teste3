@@ -1,35 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitoramento Modbus - CLP Delta DVP</title>
-  <script>
-    // Configuração do WebSocket
-    const socket = new WebSocket('ws://<IP_DO_ESP32>:80');  // Substitua <IP_DO_ESP32> pelo IP do seu ESP32
+<html>
+  <head>
+    <title>Status do ESP32</title>
+    <script>
+      function updateStatus() {
+        fetch('http://IP_DO_ESP32/status')  // URL do ESP32
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('wifi-status').innerText = data.wifiStatus;
+            document.getElementById('modbus-status').innerText = data.modbusStatus;
+          });
+      }
 
-    socket.onopen = function() {
-      console.log('Conectado ao servidor WebSocket');
-    };
-
-    socket.onmessage = function(event) {
-      const data = event.data.split(',');
-      const m0 = data[0];
-      const m1 = data[1];
-
-      // Atualiza a interface com os valores de M0 e M1
-      document.getElementById('m0').textContent = `M0: ${m0}`;
-      document.getElementById('m1').textContent = `M1: ${m1}`;
-    };
-
-    socket.onclose = function() {
-      console.log('Desconectado do servidor WebSocket');
-    };
-  </script>
-</head>
-<body>
-  <h1>Monitoramento Modbus - CLP Delta DVP</h1>
-  <p id="m0">M0: -</p>
-  <p id="m1">M1: -</p>
-</body>
+      setInterval(updateStatus, 5000);  // Atualiza a cada 5 segundos
+    </script>
+  </head>
+  <body>
+    <h1>Status do ESP32</h1>
+    <p><strong>Wi-Fi Status:</strong> <span id="wifi-status">Carregando...</span></p>
+    <p><strong>Modbus Status:</strong> <span id="modbus-status">Carregando...</span></p>
+  </body>
 </html>
