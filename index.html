@@ -1,23 +1,29 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Status do ESP32</title>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Modbus - ESP32</title>
     <script>
-      function updateStatus() {
-        fetch('http://IP_DO_ESP32/status')  // URL do ESP32
-          .then(response => response.json())
-          .then(data => {
-            document.getElementById('wifi-status').innerText = data.wifiStatus;
-            document.getElementById('modbus-status').innerText = data.modbusStatus;
-          });
-      }
-
-      setInterval(updateStatus, 5000);  // Atualiza a cada 5 segundos
+        function updateStatus() {
+            fetch('http://<IP_DO_ESP32>/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("wifiStatus").innerText = data.wifiStatus;
+                    document.getElementById("modbusStatus").innerText = data.modbusStatus;
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar status:', error);
+                    document.getElementById("modbusStatus").innerText = "Erro de comunicação Modbus";
+                    document.getElementById("wifiStatus").innerText = "Erro de conexão Wi-Fi";
+                });
+        }
+        setInterval(updateStatus, 5000); // Atualiza a cada 5 segundos
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <h1>Status do ESP32</h1>
-    <p><strong>Wi-Fi Status:</strong> <span id="wifi-status">Carregando...</span></p>
-    <p><strong>Modbus Status:</strong> <span id="modbus-status">Carregando...</span></p>
-  </body>
+    <p><strong>Wi-Fi:</strong> <span id="wifiStatus">Carregando...</span></p>
+    <p><strong>Modbus:</strong> <span id="modbusStatus">Carregando...</span></p>
+</body>
 </html>
